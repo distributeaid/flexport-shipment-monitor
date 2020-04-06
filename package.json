@@ -1,0 +1,55 @@
+{
+  "name": "@distributeaid/flexport-shipment-monitor",
+  "version": "0.0.0-development",
+  "description": "Monitor shipments on Flexport",
+  "bin": "cli/index.js",
+  "author": "Distribute Aid | https://distributeaid.org/",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/distributeaid/flexport-shipment-monitor.git"
+  },
+  "keywords": [
+    "Distribute Aid",
+    "flexport",
+    "logistics",
+    "monitor"
+  ],
+  "bugs": {
+    "url": "https://github.com/distributeaid/flexport-shipment-monitor/issues"
+  },
+  "homepage": "https://github.com/distributeaid/flexport-shipment-monitor#readme",
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=6.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --ext .js,.ts"
+    ],
+    "*.{md,json,yaml,yml,js}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@bifravst/code-style": "^7.0.2",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-angular": "^8.3.4",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "commander": "^5.0.0",
+    "husky": "^4.2.3",
+    "semantic-release": "^17.0.4",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@distributeaid/flexport-sdk": "file:../flexport-sdk-js",
+    "chalk": "^4.0.0"
+  }
+}
