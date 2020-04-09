@@ -9,9 +9,8 @@ newcomers.
 
 We take a people-first approach at Distribute Aid, and will do our best to match
 you up with work that fits your skill set and interests. Please introduce
-yourself in
-[our Slack](https://join.slack.com/t/distribute-aid/shared_invite/zt-cw357u9t-tbbd5CLDaaZCkiWd5LrOow)
-and which technologies you are familiar with as well as how much time you are
+yourself in [our Slack](https://distributeaid.github.io/slack-invite-link/) and
+which technologies you are familiar with as well as how much time you are
 willing to commit for your contributions.
 
 We'll match you with one of our tech leads to get you started on your first
