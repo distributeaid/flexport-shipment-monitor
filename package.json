@@ -39,17 +39,17 @@
     ]
   },
   "devDependencies": {
-    "@bifravst/code-style": "^7.0.2",
+    "@bifravst/code-style": "^7.0.5",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "commander": "^5.0.0",
-    "husky": "^4.2.3",
+    "husky": "^4.2.5",
     "semantic-release": "^17.0.4",
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@distributeaid/flexport-sdk": "file:../flexport-sdk-js",
+    "@distributeaid/flexport-sdk": "^1.7.0",
     "chalk": "^4.0.0"
   }
 }
