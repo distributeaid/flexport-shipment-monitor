@@ -42,8 +42,7 @@ jobs:
           npx cdk -a 'node dist/aws/cloudformation-sourcecode.js' deploy
           npx cdk bootstrap
           npx cdk deploy --require-approval never
-          npx cdk -a 'node dist/aws/cloudformation-test-extras.js' deploy --require-approval never
-      - name: Provide Twilio Settings to Stack
+      - name: Provide Flexport Settings to Stack
         run: |
           aws ssm put-parameter --name /$STACK_NAME/flexport/apiKey --type String --value $FLEXPORT_API_KEY
       - name: End-to-End Tests
@@ -53,7 +52,6 @@ jobs:
         if: failure()
         run: node dist/scripts/logs.js
       - name: Semantic release
-        if: github.ref == 'saga'
         run: |
           npm i --no-save semantic-release
           npx semantic-release
@@ -61,8 +59,6 @@ jobs:
         if: always()
         run: |
           npx cdk destroy -f '*'
-          # Delete the test-extras stack
-          npx cdk -a 'node dist/aws/cloudformation-test-extras.js' destroy -f '*'
           # Delete sourcecode bucket
           SOURCE_CODE_BUCKET=`aws cloudformation describe-stacks --stack-name $STACK_NAME-sourcecode | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "bucketName") | .OutputValue'`
           aws s3 rb s3://$SOURCE_CODE_BUCKET --force

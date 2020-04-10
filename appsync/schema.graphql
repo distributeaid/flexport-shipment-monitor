@@ -1,0 +1,59 @@
+type Quantity {
+  value: Float
+  unit: QuantityUnit
+}
+
+enum QuantityUnit {
+  kg
+  lbs
+  cbm
+  cbft
+}
+
+type Query {
+  shipments(pageToken: ID): Shipments!
+}
+
+type Schema {
+  query: Query
+}
+
+type Shipment {
+  id: ID!
+  name: String!
+  status: ShipmentStatus!
+  updated_at: String!
+  archived_at: String
+  estimated_departure_date: String
+  actual_departure_date: String
+  estimated_arrival_date: String
+  actual_arrival_date: String
+  estimated_picked_up_in_full_date: String
+  actual_picked_up_in_full_date: String
+  estimated_delivered_in_full_date: String
+  actual_delivered_in_full_date: String
+  # booking: Option<ResolvableObject>;
+  # legs: Option<ResolvableCollection>;
+  # customs_entries: Option<ResolvableCollection>;
+  # commercial_invoices: Option<ResolvableCollection>;
+  # documents: Option<ResolvableCollection>;
+  calculated_weight: Quantity
+  calculated_volume: Quantity
+  pieces: Int
+}
+
+enum ShipmentStatus {
+  seller_location
+  in_transit_to_departure_port
+  departure_port
+  in_transit_to_arrival_port
+  arrival_port
+  in_transit_to_final_destination
+  final_destination
+}
+
+type Shipments {
+  prev: ID
+  next: ID
+  items: [Shipment]!
+}

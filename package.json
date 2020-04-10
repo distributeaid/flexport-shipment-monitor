@@ -39,16 +39,26 @@
     ]
   },
   "devDependencies": {
+    "@aws-cdk/aws-apigatewayv2": "^1.32.2",
+    "@aws-cdk/aws-appsync": "^1.32.2",
+    "@aws-cdk/aws-dynamodb": "^1.32.2",
+    "@aws-cdk/aws-iam": "^1.32.2",
+    "@aws-cdk/core": "^1.32.2",
     "@bifravst/code-style": "^7.0.5",
+    "@bifravst/package-layered-lambdas": "^3.6.19",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "@semantic-release/commit-analyzer": "^8.0.1",
+    "@types/aws-lambda": "^8.10.48",
+    "aws-cdk": "^1.32.2",
     "commander": "^5.0.0",
     "husky": "^4.2.5",
+    "prettier": "^2.0.4",
     "semantic-release": "^17.0.4",
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb-v2-node": "0.1.0-preview.2",
     "@distributeaid/flexport-sdk": "^1.7.0",
     "chalk": "^4.0.0"
   },
