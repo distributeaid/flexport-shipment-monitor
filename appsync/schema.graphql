@@ -19,7 +19,7 @@ type Schema {
 }
 
 type Shipment {
-  id: ID!
+  id: Int!
   name: String!
   status: ShipmentStatus!
   updated_at: String!
@@ -39,7 +39,7 @@ type Shipment {
   # documents: Option<ResolvableCollection>;
   calculated_weight: Quantity
   calculated_volume: Quantity
-  pieces: Int
+  pieces: Int!
 }
 
 enum ShipmentStatus {
