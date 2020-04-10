@@ -1,0 +1,73 @@
+name: Test and Release
+
+on: push
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: eu-central-1
+  AWS_REGION: eu-central-1
+  STACK_NAME: test-${{ github.sha }}
+  CI: 1
+  FORCE_COLOR: 3
+  FLEXPORT_API_KEY: ${{ secrets.FLEXPORT_API_KEY }}
+
+jobs:
+  tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Authenticate with NPM
+        run: echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" > ~/.npmrc
+      - name: Keep npm cache around to speed up installs
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npx tsc
+      - name: Set up stack for End-to-End tests
+        run: |
+          npx cdk -a 'node dist/aws/cloudformation-sourcecode.js' deploy
+          npx cdk bootstrap
+          npx cdk deploy --require-approval never
+          npx cdk -a 'node dist/aws/cloudformation-test-extras.js' deploy --require-approval never
+      - name: Provide Twilio Settings to Stack
+        run: |
+          aws ssm put-parameter --name /$STACK_NAME/flexport/apiKey --type String --value $FLEXPORT_API_KEY
+      - name: End-to-End Tests
+        run: |
+          npm run test:e2e
+      - name: Get logs
+        if: failure()
+        run: node dist/scripts/logs.js
+      - name: Semantic release
+        if: github.ref == 'saga'
+        run: |
+          npm i --no-save semantic-release
+          npx semantic-release
+      - name: Clean up End-to-End test resources
+        if: always()
+        run: |
+          npx cdk destroy -f '*'
+          # Delete the test-extras stack
+          npx cdk -a 'node dist/aws/cloudformation-test-extras.js' destroy -f '*'
+          # Delete sourcecode bucket
+          SOURCE_CODE_BUCKET=`aws cloudformation describe-stacks --stack-name $STACK_NAME-sourcecode | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "bucketName") | .OutputValue'`
+          aws s3 rb s3://$SOURCE_CODE_BUCKET --force
+          # Delete the sourceode stack
+          npx cdk -a 'node dist/aws/cloudformation-sourcecode.js' destroy -f '*'
+          # Delete SSM Parameters
+          aws ssm delete-parameters --names \
+            /$STACK_NAME/flexport/apiKey
