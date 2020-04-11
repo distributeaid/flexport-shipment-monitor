@@ -3,7 +3,7 @@ import { PolicyStatement } from '@aws-cdk/aws-iam'
 import { Code, Function, ILayerVersion, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs'
 import { CfnGraphQLApi, CfnGraphQLSchema } from '@aws-cdk/aws-appsync'
-import { GQLLambdaResolver } from '../aws/resources/GQLLambdaResolver'
+import { GQLLambdaResolver, GQLType } from '../aws/resources/GQLLambdaResolver'
 
 export class GQLLambda extends Construct {
 	public readonly lambda: Function
@@ -15,7 +15,7 @@ export class GQLLambda extends Construct {
 		api: CfnGraphQLApi,
 		schema: CfnGraphQLSchema,
 		field: string,
-		type: 'Query' | 'Mutation',
+		type: GQLType | string,
 		lambda: Code,
 		policies: PolicyStatement[],
 		environment?: {
@@ -29,7 +29,7 @@ export class GQLLambda extends Construct {
 			runtime: Runtime.NODEJS_12_X,
 			timeout: Duration.seconds(30),
 			memorySize: 1792,
-			description: `AppSync handler lambda for the ${field} ${type}`,
+			description: `AppSync handler lambda for ${type}.${field}`,
 			initialPolicy: [
 				new PolicyStatement({
 					actions: [

@@ -1,3 +1,21 @@
+type Address {
+  street_address: String!
+  street_address2: String
+  city: String!
+  state: String!
+  country: String!
+  country_code: String!
+  zip: String!
+  unlocode: String!
+  timezone: String!
+  ref: String
+}
+
+type Place {
+  name: String!
+  address: Address!
+}
+
 type Quantity {
   value: Float
   unit: QuantityUnit
@@ -11,7 +29,7 @@ enum QuantityUnit {
 }
 
 type Query {
-  shipments(pageToken: ID): Shipments!
+  shipments(pageToken: ID): ShipmentCollection!
 }
 
 type Schema {
@@ -33,13 +51,34 @@ type Shipment {
   estimated_delivered_in_full_date: String
   actual_delivered_in_full_date: String
   # booking: Option<ResolvableObject>;
-  # legs: Option<ResolvableCollection>;
+  legs: [ShipmentLeg]!
   # customs_entries: Option<ResolvableCollection>;
   # commercial_invoices: Option<ResolvableCollection>;
   # documents: Option<ResolvableCollection>;
   calculated_weight: Quantity
   calculated_volume: Quantity
   pieces: Int!
+}
+
+type ShipmentCollection {
+  prev: ID
+  next: ID
+  items: [Shipment]!
+}
+
+type ShipmentLeg {
+  estimated_arrival_date: String!
+  actual_arrival_date: String
+  estimated_departure_date: String!
+  actual_departure_date: String
+  origin: ShipmentNode
+  destination: ShipmentNode
+  carrier_name: String
+}
+
+type ShipmentNode {
+  tags: [String]!
+  place: Place!
 }
 
 enum ShipmentStatus {
@@ -50,10 +89,4 @@ enum ShipmentStatus {
   arrival_port
   in_transit_to_final_destination
   final_destination
-}
-
-type Shipments {
-  prev: ID
-  next: ID
-  items: [Shipment]!
 }

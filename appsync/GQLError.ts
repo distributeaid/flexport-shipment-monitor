@@ -1,5 +1,6 @@
 import { Context } from 'aws-lambda'
 import { ErrorInfo, ErrorType } from './ErrorInfo'
+import { ApiError } from '@distributeaid/flexport-sdk'
 
 export type GQLErrorResult = {
 	errorType: ErrorType
@@ -34,9 +35,7 @@ export const GQLError = (
 	}
 }
 
-export const ToErrorInfo = (action: string, type = ErrorType.InternalError) => (
-	error: unknown,
-): ErrorInfo => ({
-	type,
-	message: `"${action}" failed: "${(error as Error).message}".`,
+export const toErrorInfo = (error: ApiError): ErrorInfo => ({
+	type: ErrorType.BadGateway,
+	message: `${error.message} (${error.code})`,
 })

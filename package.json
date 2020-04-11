@@ -45,7 +45,7 @@
     "@aws-cdk/aws-iam": "^1.32.2",
     "@aws-cdk/core": "^1.32.2",
     "@bifravst/code-style": "^7.0.5",
-    "@bifravst/package-layered-lambdas": "^3.6.19",
+    "@bifravst/package-layered-lambdas": "^3.7.0",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "@semantic-release/commit-analyzer": "^8.0.1",
@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb-v2-node": "0.1.0-preview.2",
-    "@distributeaid/flexport-sdk": "^1.7.1",
+    "@distributeaid/flexport-sdk": "^1.9.0",
     "chalk": "^4.0.0"
   },
   "jest": {

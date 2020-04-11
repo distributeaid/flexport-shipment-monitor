@@ -1,0 +1,52 @@
+import { Context } from 'aws-lambda'
+import { getFlexportSettings, FlexportSettings } from '../getFlexportSettings'
+import { SSM } from 'aws-sdk'
+import { GQLError } from '../GQLError'
+import { Either, isLeft } from 'fp-ts/lib/Either'
+import { ErrorInfo } from '../ErrorInfo'
+import {
+	createClient,
+	paginate,
+	Type,
+	ShipmentLeg,
+} from '@distributeaid/flexport-sdk'
+import { pipe } from 'fp-ts/lib/pipeable'
+import { unwrap } from '../unwrap'
+
+const fetchSettings = getFlexportSettings({
+	ssm: new SSM(),
+	scopePrefix: process.env.STACK_NAME as string,
+})
+let flexportSettings: Promise<Either<ErrorInfo, FlexportSettings>>
+
+export const handler = async (
+	event: {
+		source: {
+			legs?: string
+		}
+	},
+	context: Context,
+) => {
+	console.log(JSON.stringify({ event }))
+
+	if (!flexportSettings) {
+		flexportSettings = fetchSettings()
+	}
+	const maybeSettings = await flexportSettings
+	if (isLeft(maybeSettings)) return GQLError(context, maybeSettings.left)
+
+	if (!event.source.legs) return []
+	const client = createClient({ apiKey: maybeSettings.right.apiKey })
+
+	return unwrap(context)(
+		pipe(
+			paginate(
+				client.resolveCollectionRef<ShipmentLeg>()({
+					link: event.source.legs,
+					refType: Type.SHIPMENT_LEG_TYPE,
+				}),
+				client,
+			),
+		),
+	)
+}

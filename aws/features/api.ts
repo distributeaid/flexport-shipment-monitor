@@ -10,6 +10,7 @@ import {
 import { readFileSync } from 'fs'
 import * as path from 'path'
 import { GQLLambda } from '../../appsync/GQLLambda'
+import { GQLType } from '../resources/GQLLambdaResolver'
 
 export class ApiFeature extends Construct {
 	public readonly api: CfnGraphQLApi
@@ -21,6 +22,7 @@ export class ApiFeature extends Construct {
 		id: string,
 		lambdas: {
 			shipmentsQuery: Code
+			shipmentLegsQuery: Code
 		},
 		baseLayer: ILayerVersion,
 	) {
@@ -72,8 +74,27 @@ export class ApiFeature extends Construct {
 			this.api,
 			this.schema,
 			'shipments',
-			'Query',
+			GQLType.Query,
 			lambdas.shipmentsQuery,
+			[
+				new PolicyStatement({
+					actions: ['ssm:GetParametersByPath'],
+					resources: [
+						`arn:aws:ssm:${stack.region}:${stack.account}:parameter/${stack.stackName}/flexport`,
+					],
+				}),
+			],
+		)
+
+		new GQLLambda(
+			this,
+			stack,
+			baseLayer,
+			this.api,
+			this.schema,
+			'legs',
+			'Shipment',
+			lambdas.shipmentLegsQuery,
 			[
 				new PolicyStatement({
 					actions: ['ssm:GetParametersByPath'],

@@ -35,6 +35,10 @@ export class CoreStack extends Stack {
 					sourceCodeBucket,
 					layeredLambdas.lambdaZipFileNames.shipmentsQuery,
 				),
+				shipmentLegsQuery: Code.bucket(
+					sourceCodeBucket,
+					layeredLambdas.lambdaZipFileNames.shipmentLegsQuery,
+				),
 			},
 			baseLayer,
 		)

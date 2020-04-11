@@ -5,6 +5,7 @@ import { packLayeredLambdasForCloudFormation } from '../packLambdas'
 export type FlexportShipmentMonitorLambdas = LayeredLambdas<{
 	receiveFlexportWebhooks: string
 	shipmentsQuery: string
+	shipmentLegsQuery: string
 }>
 
 export const lambdas = async (
@@ -28,6 +29,12 @@ export const lambdas = async (
 				'appsync',
 				'queries',
 				'shipments.ts',
+			),
+			shipmentLegsQuery: path.resolve(
+				rootDir,
+				'appsync',
+				'queries',
+				'shipmentLegs.ts',
 			),
 		},
 	)

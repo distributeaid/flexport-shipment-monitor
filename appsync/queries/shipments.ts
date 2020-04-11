@@ -5,13 +5,17 @@ import { GQLError } from '../GQLError'
 import { Either, isLeft } from 'fp-ts/lib/Either'
 import { ErrorInfo, ErrorType } from '../ErrorInfo'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { createClient } from '@distributeaid/flexport-sdk'
+import { createClient, ResolvableCollection } from '@distributeaid/flexport-sdk'
+import { Option, isSome } from 'fp-ts/lib/Option'
 
 const fetchSettings = getFlexportSettings({
 	ssm: new SSM(),
 	scopePrefix: process.env.STACK_NAME as string,
 })
 let flexportSettings: Promise<Either<ErrorInfo, FlexportSettings>>
+
+const toLink = (o: Option<ResolvableCollection>): string | undefined =>
+	isSome(o) ? o.value.link : undefined
 
 export const handler = async (event: {}, context: Context) => {
 	console.log(JSON.stringify({ event }))
@@ -35,7 +39,18 @@ export const handler = async (event: {}, context: Context) => {
 		})
 	}
 
-	console.log(JSON.stringify({ shipments: shipments.right }))
+	const res = {
+		...shipments.right,
+		items: shipments.right.items.map((shipment) => ({
+			...shipment,
+			legs: toLink(shipment.legs),
+			customs_entries: toLink(shipment.customs_entries),
+			commercial_invoices: toLink(shipment.commercial_invoices),
+			documents: toLink(shipment.documents),
+		})),
+	}
 
-	return shipments.right
+	console.log(JSON.stringify(res))
+
+	return res
 }

@@ -3,13 +3,18 @@ import { PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
 import { CfnDataSource, CfnGraphQLApi, CfnResolver } from '@aws-cdk/aws-appsync'
 import { Function } from '@aws-cdk/aws-lambda'
 
+export enum GQLType {
+	Mutation = 'Mutation',
+	Query = 'Query',
+}
+
 export class GQLLambdaResolver extends Construct {
 	constructor(
 		parent: Construct,
 		id: string,
 		graphqlApi: CfnGraphQLApi,
 		field: string,
-		type: 'Mutation' | 'Query',
+		type: GQLType | string,
 		lambda: Function,
 	) {
 		super(parent, id)
@@ -54,6 +59,7 @@ export class GQLLambdaResolver extends Construct {
 				'#foreach ($key in $context.arguments.keySet())\n' +
 				'$util.qr($payload.put($key, $context.arguments.get($key)))\n' +
 				'#end\n' +
+				'$util.qr($payload.put("source", $context.source))\n' +
 				'$util.qr($payload.put("cognitoIdentityId", $context.identity.cognitoIdentityId))\n' +
 				'{"version" : "2018-05-29",  "operation": "Invoke",  "payload": $util.toJson($payload)}',
 			responseMappingTemplate:
