@@ -1,9 +1,12 @@
 import { Context } from 'aws-lambda'
-import { getFlexportSettings, FlexportSettings } from '../getFlexportSettings'
+import {
+	getFlexportSettings,
+	FlexportSettings,
+} from '../../settings/getFlexportSettings'
 import { SSM } from 'aws-sdk'
 import { GQLError } from '../GQLError'
 import { Either, isLeft } from 'fp-ts/lib/Either'
-import { ErrorInfo, ErrorType } from '../ErrorInfo'
+import { ErrorInfo, ErrorType } from '../../errors/ErrorInfo'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { createClient, ResolvableCollection } from '@distributeaid/flexport-sdk'
 import { Option, isSome } from 'fp-ts/lib/Option'

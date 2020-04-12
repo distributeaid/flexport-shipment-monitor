@@ -4,7 +4,7 @@ import {
 	PutItemInput,
 } from '@aws-sdk/client-dynamodb-v2-node'
 import * as TE from 'fp-ts/lib/TaskEither'
-import { ErrorInfo, ErrorType } from '../appsync/ErrorInfo'
+import { ErrorInfo, ErrorType } from '../errors/ErrorInfo'
 import { Event } from '@distributeaid/flexport-sdk'
 
 export const storeWebhookEvent = ({

@@ -1,7 +1,7 @@
 import { SSM } from 'aws-sdk'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { Option, fromNullable } from 'fp-ts/lib/Option'
-import { ErrorInfo, ErrorType } from './ErrorInfo'
+import { ErrorInfo, ErrorType } from '../errors/ErrorInfo'
 
 const findParameterByName = (Path: string, Parameters?: SSM.ParameterList) => (
 	name: string,

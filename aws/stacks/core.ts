@@ -4,6 +4,7 @@ import { Bucket } from '@aws-cdk/aws-s3'
 import { FlexportShipmentMonitorLambdas } from '../resources/lambdas'
 import { ApiFeature } from '../features/api'
 import { ShipmentNotificationFeature } from '../features/shipment-notifications'
+import { SlackNotificationsFeature } from '../features/slack-notifications'
 
 export class CoreStack extends Stack {
 	constructor(
@@ -70,6 +71,19 @@ export class CoreStack extends Stack {
 			value: `https://${notifications.flexportWebhookReceiver.ref}.execute-api.${this.region}.amazonaws.com/`,
 			exportName: `${this.stackName}:flexportWebhookReceiverURL`,
 		})
+
+		new SlackNotificationsFeature(
+			this,
+			'slackNotifications',
+			{
+				notifySlack: Code.bucket(
+					sourceCodeBucket,
+					layeredLambdas.lambdaZipFileNames.notifySlack,
+				),
+			},
+			baseLayer,
+			notifications,
+		)
 	}
 }
 

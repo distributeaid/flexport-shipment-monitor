@@ -1,5 +1,5 @@
 import { Context } from 'aws-lambda'
-import { ErrorInfo, ErrorType } from './ErrorInfo'
+import { ErrorInfo, ErrorType } from '../errors/ErrorInfo'
 import { ApiError } from '@distributeaid/flexport-sdk'
 
 export type GQLErrorResult = {

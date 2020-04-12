@@ -6,6 +6,7 @@ export type FlexportShipmentMonitorLambdas = LayeredLambdas<{
 	receiveFlexportWebhooks: string
 	shipmentsQuery: string
 	shipmentLegsQuery: string
+	notifySlack: string
 }>
 
 export const lambdas = async (
@@ -23,6 +24,12 @@ export const lambdas = async (
 				'notifications',
 				'lambda',
 				'receiveFlexportWebhooks.ts',
+			),
+			notifySlack: path.resolve(
+				rootDir,
+				'notifications',
+				'lambda',
+				'notifySlack.ts',
 			),
 			shipmentsQuery: path.resolve(
 				rootDir,

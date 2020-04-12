@@ -35,6 +35,7 @@ export class ShipmentNotificationFeature extends CDK.Construct {
 			removalPolicy: isTest
 				? CDK.RemovalPolicy.DESTROY
 				: CDK.RemovalPolicy.RETAIN,
+			stream: DynamoDB.StreamViewType.NEW_IMAGE,
 		})
 
 		const receiveTwilioWebhooksLambda = new Lambda.Function(

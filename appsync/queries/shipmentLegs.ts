@@ -1,9 +1,13 @@
 import { Context } from 'aws-lambda'
-import { getFlexportSettings, FlexportSettings } from '../getFlexportSettings'
+import {
+	getFlexportSettings,
+	FlexportSettings,
+} from '../../settings/getFlexportSettings'
 import { SSM } from 'aws-sdk'
 import { GQLError } from '../GQLError'
 import { Either, isLeft } from 'fp-ts/lib/Either'
-import { ErrorInfo } from '../ErrorInfo'
+import * as TE from 'fp-ts/lib/TaskEither'
+import { ErrorInfo } from '../../errors/ErrorInfo'
 import {
 	createClient,
 	paginate,
@@ -40,13 +44,11 @@ export const handler = async (
 
 	return unwrap(context)(
 		pipe(
-			paginate(
-				client.resolveCollectionRef<ShipmentLeg>()({
-					link: event.source.legs,
-					refType: Type.SHIPMENT_LEG_TYPE,
-				}),
-				client,
-			),
+			client.resolveCollectionRef<ShipmentLeg>()({
+				link: event.source.legs,
+				refType: Type.ShipmentLeg,
+			}),
+			TE.chain(paginate(client)),
 		),
 	)
 }

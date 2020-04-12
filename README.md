@@ -1,10 +1,19 @@
-# Distribute Flexport Shipment Monitor
+# Distribute Aid Flexport Shipment Monitor
 
 ![Test and Release](https://github.com/distributeaid/flexport-shipment-monitor/workflows/Test%20and%20Release/badge.svg)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-Monitor shipments on [Flexport](https://flexport.com/)
+Monitor shipments on [Flexport](https://flexport.com/).
+
+This project provides
+
+- a GraphQL API using AWS AppSync to query Flexport's
+  [API v2](https://apibeta.flexport.com/), which simplifies the resolving of
+  links and pagination.
+- a webhook receiver to receive shipment event notifications
+- a Slack notifier which posts an update to a channel when a shipment event is
+  received
 
 ## CLI Usage
 
@@ -25,6 +34,11 @@ Make sure your have AWS credentials in your environment.
 The Flexport API credentials need to be provided:
 
     aws ssm put-parameter --name /${STACK_NAME:-flexport-shipment-monitor-dev}/flexport/apiKey --type String --value <Flexport API Key>
+
+The Slack webhook endpoint needs to be provided:
+
+    # disable URL resolution in the AWS CLI: aws configure set cli_follow_urlparam false
+    aws ssm put-parameter --name /${STACK_NAME:-flexport-shipment-monitor-dev}/slack/webhook --type String --value <Slack Webhook URL>
 
 If this is the run the first time in an account
 
