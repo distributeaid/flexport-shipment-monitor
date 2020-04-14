@@ -6,6 +6,10 @@
 
 Monitor shipments on [Flexport](https://flexport.com/).
 
+> _Note:_ This project is **not feature complete**, until then 1.x releases may
+> contain breaking changes. Development is managed in
+> [this project](https://github.com/orgs/distributeaid/projects/2).
+
 This project provides
 
 - a GraphQL API using AWS AppSync to query Flexport's
