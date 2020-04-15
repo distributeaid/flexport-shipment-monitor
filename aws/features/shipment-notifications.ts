@@ -38,40 +38,36 @@ export class ShipmentNotificationFeature extends CDK.Construct {
 			stream: DynamoDB.StreamViewType.NEW_IMAGE,
 		})
 
-		const receiveFlexportWebhooksLambda = new Lambda.Function(
-			this,
-			`receiveFlexportWebhooksLambda`,
-			{
-				handler: 'index.handler',
-				runtime: Lambda.Runtime.NODEJS_12_X,
-				timeout: CDK.Duration.seconds(30),
-				memorySize: 1792,
-				description: 'Receives webhook requests from Flexport',
-				initialPolicy: [
-					new IAM.PolicyStatement({
-						actions: [
-							'logs:CreateLogGroup',
-							'logs:CreateLogStream',
-							'logs:PutLogEvents',
-						],
-						resources: [
-							`arn:aws:logs:${stack.region}:${stack.account}:/aws/lambda/*`,
-						],
-					}),
-					new IAM.PolicyStatement({
-						actions: ['dynamoDb:PutItem'],
-						resources: [this.shipmentEventsTable.tableArn],
-					}),
-				],
-				environment: {
-					SHIPMENT_EVENTS_TABLE: this.shipmentEventsTable.tableName,
-				},
-				layers: [baseLayer],
-				code: lambdas.receiveFlexportWebhooks,
+		const receiveFlexportWebhooksLambda = new Lambda.Function(this, `Lambda`, {
+			handler: 'index.handler',
+			runtime: Lambda.Runtime.NODEJS_12_X,
+			timeout: CDK.Duration.seconds(30),
+			memorySize: 1792,
+			description: 'Receives webhook requests from Flexport',
+			initialPolicy: [
+				new IAM.PolicyStatement({
+					actions: [
+						'logs:CreateLogGroup',
+						'logs:CreateLogStream',
+						'logs:PutLogEvents',
+					],
+					resources: [
+						`arn:aws:logs:${stack.region}:${stack.account}:/aws/lambda/*`,
+					],
+				}),
+				new IAM.PolicyStatement({
+					actions: ['dynamoDb:PutItem'],
+					resources: [this.shipmentEventsTable.tableArn],
+				}),
+			],
+			environment: {
+				SHIPMENT_EVENTS_TABLE: this.shipmentEventsTable.tableName,
 			},
-		)
+			layers: [baseLayer],
+			code: lambdas.receiveFlexportWebhooks,
+		})
 
-		new Logs.LogGroup(this, `receiveFlexportWebhooksLambdaLogGroup`, {
+		new Logs.LogGroup(this, `LogGroup`, {
 			removalPolicy: CDK.RemovalPolicy.DESTROY,
 			logGroupName: `/aws/lambda/${receiveFlexportWebhooksLambda.functionName}`,
 			retention: Logs.RetentionDays.ONE_WEEK,

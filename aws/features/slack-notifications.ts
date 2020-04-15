@@ -16,7 +16,7 @@ export class SlackNotificationsFeature extends CDK.Construct {
 	) {
 		super(stack, id)
 
-		const notifySlackLambda = new Lambda.Function(this, `notifySlackLambda`, {
+		const notifySlackLambda = new Lambda.Function(this, `Lambda`, {
 			handler: 'index.handler',
 			runtime: Lambda.Runtime.NODEJS_12_X,
 			timeout: CDK.Duration.seconds(30),
@@ -59,7 +59,7 @@ export class SlackNotificationsFeature extends CDK.Construct {
 			code: lambdas.notifySlack,
 		})
 
-		new Logs.LogGroup(this, `notifySlackLambdaLambdaLogGroup`, {
+		new Logs.LogGroup(this, `LogGroup`, {
 			removalPolicy: CDK.RemovalPolicy.DESTROY,
 			logGroupName: `/aws/lambda/${notifySlackLambda.functionName}`,
 			retention: Logs.RetentionDays.ONE_WEEK,
