@@ -59,7 +59,7 @@ export class SlackNotificationsFeature extends CDK.Construct {
 			code: lambdas.notifySlack,
 		})
 
-		new Logs.LogGroup(this, `receiveTwilioWebhooksLambdaLogGroup`, {
+		new Logs.LogGroup(this, `notifySlackLambdaLambdaLogGroup`, {
 			removalPolicy: CDK.RemovalPolicy.DESTROY,
 			logGroupName: `/aws/lambda/${notifySlackLambda.functionName}`,
 			retention: Logs.RetentionDays.ONE_WEEK,

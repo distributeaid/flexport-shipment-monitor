@@ -38,9 +38,9 @@ export class ShipmentNotificationFeature extends CDK.Construct {
 			stream: DynamoDB.StreamViewType.NEW_IMAGE,
 		})
 
-		const receiveTwilioWebhooksLambda = new Lambda.Function(
+		const receiveFlexportWebhooksLambda = new Lambda.Function(
 			this,
-			`receiveTwilioWebhooksLambda`,
+			`receiveFlexportWebhooksLambda`,
 			{
 				handler: 'index.handler',
 				runtime: Lambda.Runtime.NODEJS_12_X,
@@ -71,21 +71,21 @@ export class ShipmentNotificationFeature extends CDK.Construct {
 			},
 		)
 
-		new Logs.LogGroup(this, `receiveTwilioWebhooksLambdaLogGroup`, {
+		new Logs.LogGroup(this, `receiveFlexportWebhooksLambdaLogGroup`, {
 			removalPolicy: CDK.RemovalPolicy.DESTROY,
-			logGroupName: `/aws/lambda/${receiveTwilioWebhooksLambda.functionName}`,
+			logGroupName: `/aws/lambda/${receiveFlexportWebhooksLambda.functionName}`,
 			retention: Logs.RetentionDays.ONE_WEEK,
 		})
 
 		this.flexportWebhookReceiver = new HttpApi.CfnApi(this, 'httpApi', {
-			name: 'Twilio Webhook Receiver',
+			name: 'Flexport Webhook Receiver',
 			description: 'API Gateway to receive Flexport webhook requests',
 			protocolType: 'HTTP',
-			target: receiveTwilioWebhooksLambda.functionArn,
+			target: receiveFlexportWebhooksLambda.functionArn,
 		})
 
 		// API Gateway needs to be able to call the lambda
-		receiveTwilioWebhooksLambda.addPermission('invokeByHttpApi', {
+		receiveFlexportWebhooksLambda.addPermission('invokeByHttpApi', {
 			principal: new IAM.ServicePrincipal('apigateway.amazonaws.com'),
 			sourceArn: `arn:aws:execute-api:${stack.region}:${stack.account}:${this.flexportWebhookReceiver.ref}/*/$default`,
 		})
