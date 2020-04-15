@@ -44,7 +44,7 @@
     "@aws-cdk/aws-dynamodb": "^1.32.2",
     "@aws-cdk/aws-iam": "^1.32.2",
     "@aws-cdk/core": "^1.32.2",
-    "@bifravst/code-style": "^7.0.6",
+    "@bifravst/code-style": "^7.1.1",
     "@bifravst/package-layered-lambdas": "^3.7.1",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
