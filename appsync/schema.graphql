@@ -51,7 +51,7 @@ type Shipment {
   estimated_delivered_in_full_date: String
   actual_delivered_in_full_date: String
   # booking: Option<ResolvableObject>;
-  legs: [ShipmentLeg]!
+  legs: [ShipmentLeg!]!
   # customs_entries: Option<ResolvableCollection>;
   # commercial_invoices: Option<ResolvableCollection>;
   # documents: Option<ResolvableCollection>;
@@ -63,7 +63,7 @@ type Shipment {
 type ShipmentCollection {
   prev: ID
   next: ID
-  items: [Shipment]!
+  items: [Shipment!]!
 }
 
 type ShipmentLeg {
@@ -77,7 +77,7 @@ type ShipmentLeg {
 }
 
 type ShipmentNode {
-  tags: [String]!
+  tags: [String!]!
   place: Place!
 }
 
