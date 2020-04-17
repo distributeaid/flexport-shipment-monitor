@@ -56,3 +56,7 @@ Deploy the integration:
 ## Continuous Integration
 
 This project is continuously tested using a real instance.
+
+## Architecture decision records (ADRs)
+
+see [./adr](./adr).
