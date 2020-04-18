@@ -19,7 +19,14 @@ This project provides
 - a Slack notifier which posts an update to a channel when a shipment event is
   received
 
-## CLI Usage
+## Development
+
+> ℹ️ These instructions apply to Unix-based development environments; Linux and
+> Mac users should be fine. Windows users could look into setting up their
+> development environment using
+> [WSL2](https://docs.microsoft.com/en-us/windows/wsl/wsl2-index).
+
+### CLI Usage
 
     npm ci
     npx tsc
@@ -28,7 +35,7 @@ This project provides
 
     node cli
 
-## Deploy
+### Deploy
 
 Make sure your have AWS credentials in your environment.
 
