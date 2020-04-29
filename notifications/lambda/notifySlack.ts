@@ -100,11 +100,17 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 									value: `<https://app.flexport.com/shipments/${id}|${id}>`,
 									short: true,
 								},
-								milestoneInfo && {
-									title: e(milestoneInfo.name),
-									value: e(milestoneInfo.description),
-									short: false,
-								},
+								milestoneInfo
+									? {
+											title: e(milestoneInfo.name),
+											value: e(milestoneInfo.description),
+											short: false,
+									  }
+									: {
+											title: 'Unknown event type received',
+											value: e(type),
+											short: false,
+									  },
 							],
 							footer:
 								'<https://github.com/distributeaid/flexport-shipment-monitor|Flexport Shipment Monitor>',
