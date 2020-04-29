@@ -15,6 +15,13 @@ const fetchSettings = getSlackSettings({
 })
 let slackSettings: Promise<Either<ErrorInfo, SlackSettings>>
 
+/**
+ * Escape special characters
+ * @see https://api.slack.com/reference/surfaces/formatting#escaping
+ */
+const e = (str: string) =>
+	str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
 export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 	console.log(JSON.stringify(event))
 
@@ -77,14 +84,14 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 					text: 'Shipment update received:',
 					attachments: [
 						{
-							fallback: `Shipment ${id} was updated: ${
-								milestoneInfo?.name ?? type
-							}`,
+							fallback: `Shipment ${id} was updated: ${e(
+								milestoneInfo?.name ?? type,
+							)}`,
 							fields: [
 								{
 									title: 'Name',
 									value: `<https://app.flexport.com/shipments/${id}|${
-										data?.shipment?.name ?? 'Unknown'
+										e(data?.shipment?.name) ?? 'Unknown'
 									}>`,
 									short: true,
 								},
@@ -94,8 +101,8 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 									short: true,
 								},
 								milestoneInfo && {
-									title: milestoneInfo.name,
-									value: milestoneInfo.description,
+									title: e(milestoneInfo.name),
+									value: e(milestoneInfo.description),
 									short: false,
 								},
 							],
