@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/distributeaid/flexport-shipment-monitor#readme",
   "engines": {
-    "node": ">=12.0.0",
+    "node": ">=14.0.0",
     "npm": ">=6.0.0"
+  },
+  "scripts": {
+    "postinstall": "check-node-version --package"
   },
   "husky": {
     "hooks": {
@@ -52,6 +55,7 @@
     "@types/aws-lambda": "^8.10.51",
     "@types/node-fetch": "^2.5.7",
     "aws-cdk": "^1.36.0",
+    "check-node-version": "^4.0.3",
     "commander": "^5.1.0",
     "husky": "^4.2.5",
     "prettier": "^2.0.5",
