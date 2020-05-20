@@ -41,7 +41,6 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 			if (!dynamodb?.NewImage) return
 			const {
 				occurred_at: { S: occurred_at },
-				id: { N: id },
 				type: { S: type },
 				data: { S: jsonData },
 			} = dynamodb?.NewImage
@@ -62,7 +61,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 					}),
 				)
 			}
-			let data
+			let data: ShipmentEventData
 			if (!jsonData) {
 				console.error(
 					JSON.stringify({
@@ -72,10 +71,20 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 				return
 			} else {
 				try {
-					data = JSON.parse(jsonData)
+					data = JSON.parse(jsonData) as ShipmentEventData
 				} catch {
 					console.error('Failed to parse Data')
+					return
 				}
+			}
+			const shipment = data?.shipment
+			if (!shipment) {
+				console.error(
+					JSON.stringify({
+						error: `Event has no shipment data!`,
+					}),
+				)
+				return
 			}
 
 			const req = {
@@ -84,20 +93,20 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 					text: 'Shipment update received:',
 					attachments: [
 						{
-							fallback: `Shipment ${id} was updated: ${e(
+							fallback: `Shipment ${shipment.id} was updated: ${e(
 								milestoneInfo?.name ?? type,
 							)}`,
 							fields: [
 								{
 									title: 'Name',
-									value: `<https://app.flexport.com/shipments/${id}|${
-										e(data?.shipment?.name) ?? 'Unknown'
+									value: `<https://app.flexport.com/shipments/${shipment.id}|${
+										e(shipment.name) ?? 'Unknown'
 									}>`,
 									short: true,
 								},
 								{
 									title: 'ID',
-									value: `<https://app.flexport.com/shipments/${id}|${id}>`,
+									value: `<https://app.flexport.com/shipments/${shipment.id}|${shipment.id}>`,
 									short: true,
 								},
 								milestoneInfo

@@ -28,6 +28,11 @@ export const storeWebhookEvent = ({
 					id: {
 						N: `${id}`,
 					},
+					...(data?.shipment && {
+						shipmentId: {
+							N: `${data.shipment.id}`,
+						},
+					}),
 					occurred_at: {
 						S: occurred_at || created_at,
 					},
