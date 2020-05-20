@@ -8,7 +8,7 @@ import { GQLError } from '../GQLError'
 import { Either, isLeft } from 'fp-ts/lib/Either'
 import { ErrorInfo, ErrorType } from '../../errors/ErrorInfo'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { createClient, ResolvableCollection } from '@distributeaid/flexport-sdk'
+import { v2Client, ResolvableCollection } from '@distributeaid/flexport-sdk'
 import { Option, isSome } from 'fp-ts/lib/Option'
 
 const fetchSettings = getFlexportSettings({
@@ -31,9 +31,9 @@ export const handler = async (event: {}, context: Context) => {
 
 	const { apiKey } = maybeSettings.right
 
-	const client = createClient({ apiKey })
+	const client = v2Client({ apiKey })
 
-	const shipments = await pipe(client.listAllShipments())()
+	const shipments = await pipe(client.shipment_index())()
 
 	if (isLeft(shipments)) {
 		return GQLError(context, {

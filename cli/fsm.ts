@@ -1,9 +1,9 @@
 import * as program from 'commander'
 import * as chalk from 'chalk'
 import { listCommand } from './commands/list'
-import { createClient } from '@distributeaid/flexport-sdk'
+import { v2Client } from '@distributeaid/flexport-sdk'
 
-const flexportClient = createClient({
+const flexportClient = v2Client({
 	apiKey: process.env.FLEXPORT_API_KEY || '',
 })
 
@@ -49,7 +49,7 @@ const fsmCLI = async () => {
 	}
 }
 
-fsmCLI().catch(err => {
+fsmCLI().catch((err) => {
 	console.error(chalk.red(err))
 	process.exit(1)
 })

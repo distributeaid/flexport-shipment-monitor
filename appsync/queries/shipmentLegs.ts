@@ -9,10 +9,10 @@ import { Either, isLeft } from 'fp-ts/lib/Either'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { ErrorInfo } from '../../errors/ErrorInfo'
 import {
-	createClient,
+	v2Client,
 	paginate,
 	Type,
-	ShipmentLeg,
+	liftShipmentLeg,
 } from '@distributeaid/flexport-sdk'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { unwrap } from '../unwrap'
@@ -40,15 +40,15 @@ export const handler = async (
 	if (isLeft(maybeSettings)) return GQLError(context, maybeSettings.left)
 
 	if (!event.source.legs) return []
-	const client = createClient({ apiKey: maybeSettings.right.apiKey })
+	const client = v2Client({ apiKey: maybeSettings.right.apiKey })
 
 	return unwrap(context)(
 		pipe(
-			client.resolveCollectionRef<ShipmentLeg>()({
+			client.resolveCollection(liftShipmentLeg)({
 				link: event.source.legs,
 				refType: Type.ShipmentLeg,
 			}),
-			TE.chain(paginate(client)),
+			TE.chain(paginate(client.resolvePage(liftShipmentLeg))),
 		),
 	)
 }

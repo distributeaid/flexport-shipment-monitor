@@ -2,7 +2,7 @@ import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb-v2-node'
 import { storeWebhookEvent } from '../storeWebhookEvent'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { Event } from '@distributeaid/flexport-sdk'
+import { WebhookEvent } from '@distributeaid/flexport-sdk'
 
 const dynamodb = new DynamoDBClient({})
 
@@ -16,7 +16,7 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
 	if (!event.body)
 		return { statusCode: 400, body: 'Must provide event payload' }
-	let e: Event
+	let e: WebhookEvent
 	try {
 		e = JSON.parse(event.body)
 		console.log(JSON.stringify({ event: e }))

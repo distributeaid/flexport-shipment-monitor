@@ -5,7 +5,7 @@ import {
 } from '@aws-sdk/client-dynamodb-v2-node'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { ErrorInfo, ErrorType } from '../errors/ErrorInfo'
-import { Event } from '@distributeaid/flexport-sdk'
+import { WebhookEvent } from '@distributeaid/flexport-sdk'
 
 export const storeWebhookEvent = ({
 	dynamodb,
@@ -19,7 +19,7 @@ export const storeWebhookEvent = ({
 	created_at,
 	occurred_at,
 	data,
-}: Event): TE.TaskEither<ErrorInfo, boolean> =>
+}: WebhookEvent): TE.TaskEither<ErrorInfo, boolean> =>
 	TE.tryCatch<ErrorInfo, boolean>(
 		async () => {
 			const query: PutItemInput = {

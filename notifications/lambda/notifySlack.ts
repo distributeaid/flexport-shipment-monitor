@@ -7,7 +7,7 @@ import { SSM } from 'aws-sdk'
 import { ErrorInfo } from '../../errors/ErrorInfo'
 import { Either, isLeft } from 'fp-ts/lib/Either'
 import fetch from 'node-fetch'
-import { MilestoneInfo } from '@distributeaid/flexport-sdk'
+import { MilestoneInfo, ShipmentEventData } from '@distributeaid/flexport-sdk'
 
 const fetchSettings = getSlackSettings({
 	ssm: new SSM(),
