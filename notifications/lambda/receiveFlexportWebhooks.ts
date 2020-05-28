@@ -8,13 +8,13 @@ const dynamodb = new DynamoDBClient({})
 
 const persist = storeWebhookEvent({
 	dynamodb,
-	TableName: process.env.SHIPMENT_EVENTS_TABLE || '',
+	TableName: process.env.SHIPMENT_EVENTS_TABLE ?? '',
 })
 
 export const handler = async (
 	event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
-	if (!event.body)
+	if (event.body === null)
 		return { statusCode: 400, body: 'Must provide event payload' }
 	let e: WebhookEvent
 	try {
@@ -26,5 +26,8 @@ export const handler = async (
 
 	await pipe(persist(e))()
 
-	return { statusCode: 202, body: '' }
+	return {
+		statusCode: 202,
+		body: '',
+	}
 }

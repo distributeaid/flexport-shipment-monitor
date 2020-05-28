@@ -25,7 +25,7 @@ const e = (str: string) =>
 export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 	console.log(JSON.stringify(event))
 
-	if (!slackSettings) {
+	if (slackSettings === undefined) {
 		slackSettings = fetchSettings()
 	}
 	const maybeSettings = await slackSettings
@@ -35,17 +35,18 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 	}
 
 	const { webhook } = maybeSettings.right
+	console.log(JSON.stringify({ webhook }))
 
 	await Promise.all(
 		event.Records.map(async ({ dynamodb }) => {
-			if (!dynamodb?.NewImage) return
+			if (dynamodb?.NewImage === undefined) return
 			const {
 				occurred_at: { S: occurred_at },
 				type: { S: type },
 				data: { S: jsonData },
 			} = dynamodb?.NewImage
 
-			if (!type) {
+			if (type === undefined) {
 				console.error(
 					JSON.stringify({
 						error: 'Event has no "type"!',
@@ -54,7 +55,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 				return
 			}
 			const milestoneInfo = MilestoneInfo[type]
-			if (!milestoneInfo) {
+			if (milestoneInfo === undefined) {
 				console.error(
 					JSON.stringify({
 						error: `Unknown type '${type}'!`,
@@ -62,7 +63,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 				)
 			}
 			let data: ShipmentEventData
-			if (!jsonData) {
+			if (jsonData === undefined) {
 				console.error(
 					JSON.stringify({
 						error: `Event has no data!`,
@@ -78,7 +79,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 				}
 			}
 			const shipment = data?.shipment
-			if (!shipment) {
+			if (shipment === undefined) {
 				console.error(
 					JSON.stringify({
 						error: `Event has no shipment data!`,
@@ -109,7 +110,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 									value: `<https://app.flexport.com/shipments/${shipment.id}|${shipment.id}>`,
 									short: true,
 								},
-								milestoneInfo
+								milestoneInfo !== undefined
 									? {
 											title: e(milestoneInfo.name),
 											value: e(milestoneInfo.description),

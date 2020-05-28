@@ -24,7 +24,9 @@
     "npm": ">=6.0.0"
   },
   "scripts": {
-    "postinstall": "check-node-version --package"
+    "postinstall": "check-node-version --package",
+    "test:e2e": "node dist/feature-runner/run-features.js ./features --print-results --progress",
+    "test": "npm run test:e2e"
   },
   "husky": {
     "hooks": {
@@ -42,30 +44,31 @@
     ]
   },
   "devDependencies": {
-    "@aws-cdk/aws-apigatewayv2": "^1.40.0",
-    "@aws-cdk/aws-appsync": "^1.40.0",
-    "@aws-cdk/aws-dynamodb": "^1.40.0",
-    "@aws-cdk/aws-iam": "^1.40.0",
-    "@aws-cdk/core": "^1.40.0",
-    "@bifravst/code-style": "^7.1.11",
-    "@bifravst/package-layered-lambdas": "^3.8.13",
+    "@aws-cdk/aws-apigateway": "^1.42.0",
+    "@aws-cdk/aws-apigatewayv2": "^1.42.0",
+    "@aws-cdk/aws-appsync": "^1.42.0",
+    "@aws-cdk/aws-dynamodb": "^1.42.0",
+    "@aws-cdk/aws-iam": "^1.42.0",
+    "@aws-cdk/core": "^1.42.0",
+    "@bifravst/code-style": "^8.0.0",
+    "@bifravst/package-layered-lambdas": "^3.9.0",
+    "@coderbyheart/bdd-feature-runner-aws": "^11.0.2",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
-    "@semantic-release/commit-analyzer": "^8.0.1",
     "@types/aws-lambda": "^8.10.51",
     "@types/node-fetch": "^2.5.7",
-    "aws-cdk": "^1.40.0",
+    "aws-cdk": "^1.42.0",
     "check-node-version": "^4.0.3",
     "commander": "^5.1.0",
     "husky": "^4.2.5",
     "prettier": "^2.0.5",
-    "semantic-release": "^17.0.7",
     "typescript": "^3.9.3"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb-v2-node": "0.1.0-preview.2",
-    "@distributeaid/flexport-sdk": "^1.16.2",
+    "@distributeaid/flexport-sdk": "^1.16.3",
     "chalk": "^4.0.0",
+    "date-fns": "^2.14.0",
     "node-fetch": "^2.6.0"
   },
   "jest": {
