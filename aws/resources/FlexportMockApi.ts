@@ -3,7 +3,6 @@ import * as IAM from '@aws-cdk/aws-iam'
 import * as Logs from '@aws-cdk/aws-logs'
 import * as Lambda from '@aws-cdk/aws-lambda'
 import * as ApiGateway from '@aws-cdk/aws-apigateway'
-import { v4 } from 'uuid'
 
 /**
  * Sets up resources to receive webhook requests sent by the Slack notification feature
@@ -17,19 +16,21 @@ export class FlexportMockApi extends CDK.Construct {
 		id: string,
 		{
 			flexportMockApiLambda,
-			baseLayer,
+			layers,
 		}: {
 			flexportMockApiLambda: Lambda.Code
-			baseLayer: Lambda.ILayerVersion
+			layers: Lambda.ILayerVersion[]
 		},
 	) {
 		super(parent, id)
+
+		this.apiKey = '3eebcbf5-aa9e-4d34-8ea2-3b7bdd6538d1'
 
 		// This lambda will behave like the Flexport API
 		const lambda = new Lambda.Function(this, 'Lambda', {
 			description: `Provides a mock Flexport v2 API`,
 			code: flexportMockApiLambda,
-			layers: [baseLayer],
+			layers,
 			handler: 'index.handler',
 			runtime: Lambda.Runtime.NODEJS_12_X,
 			timeout: CDK.Duration.seconds(15),
@@ -43,6 +44,9 @@ export class FlexportMockApi extends CDK.Construct {
 					],
 				}),
 			],
+			environment: {
+				API_KEY: this.apiKey,
+			},
 		})
 		// Create the log group here, so we can control the retention
 		new Logs.LogGroup(this, `LambdaLogGroup`, {
@@ -53,18 +57,12 @@ export class FlexportMockApi extends CDK.Construct {
 
 		// This is the API Gateway, AWS CDK automatically creates a prod stage and deployment
 		this.api = new ApiGateway.RestApi(this, 'api', {
-			restApiName: 'Webhook Receiver API',
-			description: 'API Gateway to test webhook deliveries',
+			restApiName: 'Flexport Mock API',
+			description: 'API Gateway to provide a mock Flexport API',
 			endpointTypes: [ApiGateway.EndpointType.REGIONAL],
 		})
-		this.apiKey = v4()
-		this.api.addApiKey('test', {
-			value: this.apiKey,
-		})
 		const proxyResource = this.api.root.addResource('{proxy+}')
-		proxyResource.addMethod('ANY', new ApiGateway.LambdaIntegration(lambda), {
-			apiKeyRequired: true,
-		})
+		proxyResource.addMethod('ANY', new ApiGateway.LambdaIntegration(lambda), {})
 		// API Gateway needs to be able to call the lambda
 		lambda.addPermission('InvokeByApiGateway', {
 			principal: new IAM.ServicePrincipal('apigateway.amazonaws.com'),

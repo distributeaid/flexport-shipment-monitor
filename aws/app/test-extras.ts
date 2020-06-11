@@ -7,6 +7,7 @@ export class TestExtrasApp extends App {
 		stackName: string,
 		sourceCodeBucketName: string,
 		baseLayerZipFileName: string,
+		testLayerZipFileName: string,
 		layeredLambdas: TestExtrasLayeredLambdas,
 	) {
 		super()
@@ -16,6 +17,7 @@ export class TestExtrasApp extends App {
 			stackName,
 			sourceCodeBucketName,
 			baseLayerZipFileName,
+			testLayerZipFileName,
 			layeredLambdas,
 		)
 	}

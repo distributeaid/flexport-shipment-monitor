@@ -14,6 +14,7 @@ export class TestExtrasStack extends Stack {
 		id: string,
 		sourceCodeBucketName: string,
 		baseLayerZipFileName: string,
+		testExtrasLayerZipFileName: string,
 		layeredLambdas: TestExtrasLayeredLambdas,
 	) {
 		super(parent, id)
@@ -29,13 +30,18 @@ export class TestExtrasStack extends Stack {
 			compatibleRuntimes: [Runtime.NODEJS_12_X],
 		})
 
+		const testExtrasLayer = new LayerVersion(this, `${id}-test-layer`, {
+			code: Code.bucket(sourceCodeBucket, testExtrasLayerZipFileName),
+			compatibleRuntimes: [Runtime.NODEJS_12_X],
+		})
+
 		// Webhook receiver for slack notifications
 		const webhookReceiver = new WebhookReceiver(this, 'webhookReceiver', {
 			webhookReceiverLambda: Code.bucket(
 				sourceCodeBucket,
 				layeredLambdas.lambdaZipFileNames.webhookReceiver,
 			),
-			baseLayer,
+			layers: [baseLayer],
 		})
 		new CfnOutput(this, 'webhookReceiverApiUrl', {
 			value: webhookReceiver.api.url,
@@ -52,7 +58,7 @@ export class TestExtrasStack extends Stack {
 				sourceCodeBucket,
 				layeredLambdas.lambdaZipFileNames.flexportMockApi,
 			),
-			baseLayer,
+			layers: [baseLayer, testExtrasLayer],
 		})
 		new CfnOutput(this, 'flexportMockApiUrl', {
 			value: flexportMockApi.api.url,

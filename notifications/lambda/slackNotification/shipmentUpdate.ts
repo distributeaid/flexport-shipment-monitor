@@ -2,25 +2,19 @@ import { DynamoDBStreamEvent } from 'aws-lambda'
 import {
 	getSlackSettings,
 	SlackSettings,
-} from '../../settings/getSlackSettings'
+} from '../../../settings/getSlackSettings'
 import { SSM } from 'aws-sdk'
-import { ErrorInfo } from '../../errors/ErrorInfo'
+import { ErrorInfo } from '../../../errors/ErrorInfo'
 import { Either, isLeft } from 'fp-ts/lib/Either'
 import fetch from 'node-fetch'
 import { MilestoneInfo, ShipmentEventData } from '@distributeaid/flexport-sdk'
+import { e } from './escape'
 
 const fetchSettings = getSlackSettings({
 	ssm: new SSM(),
 	scopePrefix: process.env.STACK_NAME as string,
 })
 let slackSettings: Promise<Either<ErrorInfo, SlackSettings>>
-
-/**
- * Escape special characters
- * @see https://api.slack.com/reference/surfaces/formatting#escaping
- */
-const e = (str: string) =>
-	str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
 	console.log(JSON.stringify(event))

@@ -33,14 +33,17 @@ export const handler = async (
 ) => {
 	console.log(JSON.stringify({ event }))
 
-	if (!flexportSettings) {
+	if (flexportSettings === undefined) {
 		flexportSettings = fetchSettings()
 	}
 	const maybeSettings = await flexportSettings
 	if (isLeft(maybeSettings)) return GQLError(context, maybeSettings.left)
 
-	if (!event.source.legs) return []
-	const client = v2Client({ apiKey: maybeSettings.right.apiKey })
+	if (event.source.legs === undefined) return []
+	const client = v2Client({
+		apiKey: maybeSettings.right.apiKey,
+		endpoint: maybeSettings.right.endpoint,
+	})
 
 	return unwrap(context)(
 		pipe(

@@ -20,18 +20,22 @@ let flexportSettings: Promise<Either<ErrorInfo, FlexportSettings>>
 const toLink = (o: Option<ResolvableCollection>): string | undefined =>
 	isSome(o) ? o.value.link : undefined
 
-export const handler = async (event: {}, context: Context) => {
+export const handler = async (
+	event: Record<string, unknown>,
+	context: Context,
+) => {
 	console.log(JSON.stringify({ event }))
 
-	if (!flexportSettings) {
+	if (flexportSettings === undefined) {
 		flexportSettings = fetchSettings()
 	}
 	const maybeSettings = await flexportSettings
 	if (isLeft(maybeSettings)) return GQLError(context, maybeSettings.left)
 
-	const { apiKey } = maybeSettings.right
-
-	const client = v2Client({ apiKey })
+	const client = v2Client({
+		apiKey: maybeSettings.right.apiKey,
+		endpoint: maybeSettings.right.endpoint,
+	})
 
 	const shipments = await pipe(client.shipment_index())()
 

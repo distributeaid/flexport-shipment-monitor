@@ -42,9 +42,13 @@ jobs:
           aws configure set cli_follow_urlparam false
           FLEXPORT_API_KEY=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "flexportMockApiKey") | .OutputValue'`
           FLEXPORT_API_URL=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "flexportMockApiUrl") | .OutputValue'`
-          WEBHOOK_RECEIVER_URL=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "webhookReceiverApiUrl") | .OutputValue'`
           aws ssm put-parameter --name /$STACK_NAME/flexport/apiKey --type String --value $FLEXPORT_API_KEY
-          aws ssm put-parameter --name /$STACK_NAME/flexport/apiUrl --type String --value $FLEXPORT_API_URL
+          aws ssm put-parameter --name /$STACK_NAME/flexport/endpoint --type String --value $FLEXPORT_API_URL
+      - name: Provide Slack Settings to Stack
+        run: |
+          # disable URL resolution in the AWS CLI: 
+          aws configure set cli_follow_urlparam false
+          WEBHOOK_RECEIVER_URL=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "webhookReceiverApiUrl") | .OutputValue' |  sed 's/\/$//'`
           aws ssm put-parameter --name /$STACK_NAME/slack/webhook --type String --value $WEBHOOK_RECEIVER_URL/slack
       - name: End-to-End Tests
         run: |
@@ -69,4 +73,6 @@ jobs:
           npx cdk -a 'node dist/aws/cloudformation-sourcecode.js' destroy -f '*'
           # Delete SSM Parameters
           aws ssm delete-parameters --names \
-            /$STACK_NAME/flexport/apiKey
+            /$STACK_NAME/flexport/apiKey \
+            /$STACK_NAME/flexport/endpoint \
+            /$STACK_NAME/slack/webhook

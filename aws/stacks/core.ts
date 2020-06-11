@@ -68,22 +68,31 @@ export class CoreStack extends Stack {
 		)
 
 		new CfnOutput(this, 'flexportWebhookReceiverURL', {
-			value: `https://${notifications.flexportWebhookReceiver.ref}.execute-api.${this.region}.amazonaws.com/`,
+			value: `https://${notifications.flexportWebhookReceiver.ref}.execute-api.${this.region}.amazonaws.com`,
 			exportName: `${this.stackName}:flexportWebhookReceiverURL`,
 		})
 
-		new SlackNotificationsFeature(
+		const slackNotifications = new SlackNotificationsFeature(
 			this,
 			'slackNotifications',
 			{
-				notifySlack: Code.bucket(
+				shipmentUpdate: Code.bucket(
 					sourceCodeBucket,
-					layeredLambdas.lambdaZipFileNames.notifySlack,
+					layeredLambdas.lambdaZipFileNames.shipmentUpdateSlackNotification,
+				),
+				shipmentSummary: Code.bucket(
+					sourceCodeBucket,
+					layeredLambdas.lambdaZipFileNames.shipmentSummarySlackNotification,
 				),
 			},
 			baseLayer,
 			notifications,
 		)
+
+		new CfnOutput(this, 'slackNotificationShipmentSummaryLambdaName', {
+			value: slackNotifications.shipmentSummaryLambda.functionName,
+			exportName: `${this.stackName}:slackNotificationShipmentSummaryLambdaName`,
+		})
 	}
 }
 
@@ -91,4 +100,5 @@ export type StackConfig = {
 	apiUrl: string
 	apiKey: string
 	flexportWebhookReceiverURL: string
+	slackNotificationShipmentSummaryLambdaName: string
 }

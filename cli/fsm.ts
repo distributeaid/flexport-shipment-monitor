@@ -3,8 +3,11 @@ import * as chalk from 'chalk'
 import { listCommand } from './commands/list'
 import { v2Client } from '@distributeaid/flexport-sdk'
 
+const apiEndpoint = process.env.FLEXPORT_API_ENDPOINT
+
 const flexportClient = v2Client({
-	apiKey: process.env.FLEXPORT_API_KEY || '',
+	apiKey: process.env.FLEXPORT_API_KEY ?? '',
+	...(apiEndpoint !== undefined && { endpoint: apiEndpoint }),
 })
 
 const fsmCLI = async () => {

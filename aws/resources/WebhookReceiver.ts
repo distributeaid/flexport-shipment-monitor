@@ -17,10 +17,10 @@ export class WebhookReceiver extends CDK.Construct {
 		id: string,
 		{
 			webhookReceiverLambda,
-			baseLayer,
+			layers,
 		}: {
 			webhookReceiverLambda: Lambda.Code
-			baseLayer: Lambda.ILayerVersion
+			layers: Lambda.ILayerVersion[]
 		},
 	) {
 		super(parent, id)
@@ -36,7 +36,7 @@ export class WebhookReceiver extends CDK.Construct {
 		const lambda = new Lambda.Function(this, 'Lambda', {
 			description: `Receives webhook requests from the Slack notification feature`,
 			code: webhookReceiverLambda,
-			layers: [baseLayer],
+			layers,
 			handler: 'index.handler',
 			runtime: Lambda.Runtime.NODEJS_12_X,
 			timeout: CDK.Duration.seconds(15),

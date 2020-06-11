@@ -5,18 +5,23 @@ import {
 	webhookStepRunners,
 	restStepRunners,
 	randomStepRunners,
+	awsSdkStepRunners,
 } from '@coderbyheart/bdd-feature-runner-aws'
 import * as chalk from 'chalk'
 import * as program from 'commander'
 import { StackConfig } from '../aws/stacks/core'
 import { TestExtrasStackConfig } from '../aws/stacks/test-extras'
 import { stackName } from '../aws/stackName'
+import { mockApiStepRunners } from './steps/mockApi'
 
 let ran = false
 
 export type World = {
 	flexportWebhookReceiverURL: string
 	region: string
+	flexportMockApiUrl: string
+	flexportMockApiKey: string
+	slackNotificationShipmentSummaryLambdaName: string
 }
 
 const region = process.env.AWS_REGION ?? ''
@@ -48,7 +53,11 @@ program
 
 			const world: World = {
 				flexportWebhookReceiverURL: stackConfig.flexportWebhookReceiverURL,
+				slackNotificationShipmentSummaryLambdaName:
+					stackConfig.slackNotificationShipmentSummaryLambdaName,
 				region,
+				flexportMockApiUrl: testStackConfig.flexportMockApiUrl,
+				flexportMockApiKey: testStackConfig.flexportMockApiKey,
 			}
 
 			console.log(chalk.yellow.bold(' World:'))
@@ -82,11 +91,16 @@ program
 						},
 					}),
 				)
+				.addStepRunners(mockApiStepRunners())
+				.addStepRunners(
+					awsSdkStepRunners({
+						region,
+					}),
+				)
 
 			const { success } = await runner.run()
 			if (!success) {
 				process.exit(1)
-				return
 			}
 			process.exit()
 		},
