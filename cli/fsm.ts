@@ -1,19 +1,31 @@
 import * as program from 'commander'
 import * as chalk from 'chalk'
 import { listCommand } from './commands/list'
+import { SSM } from 'aws-sdk'
+import { getFlexportSettings } from '../settings/getFlexportSettings'
+import { pipe } from 'fp-ts/lib/pipeable'
+import * as TE from 'fp-ts/lib/TaskEither'
 import { v2Client } from '@distributeaid/flexport-sdk'
 
-const apiEndpoint = process.env.FLEXPORT_API_ENDPOINT
-
-const flexportClient = v2Client({
-	apiKey: process.env.FLEXPORT_API_KEY ?? '',
-	...(apiEndpoint !== undefined && { endpoint: apiEndpoint }),
+const flexportSettingsFetcher = getFlexportSettings({
+	ssm: new SSM(),
+	scopePrefix: process.env.STACK_NAME as string,
 })
 
 const fsmCLI = async () => {
 	program.description('Flexport Shipment Monitor')
 
-	const commands = [listCommand({ flexportClient })]
+	const commands = [
+		listCommand({
+			flexportClient: () =>
+				pipe(
+					flexportSettingsFetcher,
+					TE.map((settings) =>
+						v2Client({ apiKey: settings.apiKey, endpoint: settings.endpoint }),
+					),
+				),
+		}),
+	]
 
 	let ran = false
 	commands.forEach(({ command, action, help, options }) => {
