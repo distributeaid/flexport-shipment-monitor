@@ -57,7 +57,7 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "@distributeaid/flexport-api-sandbox": "^1.5.2",
-    "@types/aws-lambda": "^8.10.55",
+    "@types/aws-lambda": "^8.10.56",
     "@types/node-fetch": "^2.5.7",
     "aws-cdk": "^1.45.0",
     "check-node-version": "^4.0.3",
