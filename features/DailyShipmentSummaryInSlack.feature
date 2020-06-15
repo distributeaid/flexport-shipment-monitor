@@ -949,7 +949,7 @@ Feature: Daily Shipment Summary in Slack
                         "type": "mrkdwn",
                         "text": "693798: <https://app.flexport.com/shipments/693798|PO123 Urgent product launch shipment LA>"
                         },
-                        { "type": "mrkdwn", "text": "*seller_location* (3 months ago)" }
+                        { "type": "mrkdwn", "text": "*seller_location* (4 months ago)" }
                     ]
                     },
                     { "type": "divider" },
@@ -960,7 +960,7 @@ Feature: Daily Shipment Summary in Slack
                         "type": "mrkdwn",
                         "text": "646568: <https://app.flexport.com/shipments/646568|Test Annie 1019_01  !>"
                         },
-                        { "type": "mrkdwn", "text": "*seller_location* (3 months ago)" }
+                        { "type": "mrkdwn", "text": "*seller_location* (4 months ago)" }
                     ]
                     },
                     { "type": "divider" },
@@ -1059,7 +1059,7 @@ Feature: Daily Shipment Summary in Slack
                         "type": "mrkdwn",
                         "text": "698285: <https://app.flexport.com/shipments/698285|lcl shipment>"
                         },
-                        { "type": "mrkdwn", "text": "*departure_port* (4 months ago)" }
+                        { "type": "mrkdwn", "text": "*departure_port* (5 months ago)" }
                     ]
                     },
                     { "type": "divider" },
@@ -1070,7 +1070,7 @@ Feature: Daily Shipment Summary in Slack
                         "type": "mrkdwn",
                         "text": "699750: <https://app.flexport.com/shipments/699750|Victor LCL Test 20191226_1>"
                         },
-                        { "type": "mrkdwn", "text": "*seller_location* (4 months ago)" }
+                        { "type": "mrkdwn", "text": "*seller_location* (5 months ago)" }
                     ]
                     },
                     { "type": "divider" },
@@ -1081,7 +1081,7 @@ Feature: Daily Shipment Summary in Slack
                         "type": "mrkdwn",
                         "text": "699752: <https://app.flexport.com/shipments/699752|Victor LCL Test 20191226_2>"
                         },
-                        { "type": "mrkdwn", "text": "*seller_location* (4 months ago)" }
+                        { "type": "mrkdwn", "text": "*seller_location* (5 months ago)" }
                     ]
                     },
                     { "type": "divider" },
@@ -1092,7 +1092,7 @@ Feature: Daily Shipment Summary in Slack
                         "type": "mrkdwn",
                         "text": "653678: <https://app.flexport.com/shipments/653678|CRD test 2 - no origin leg>"
                         },
-                        { "type": "mrkdwn", "text": "*departure_port* (4 months ago)" }
+                        { "type": "mrkdwn", "text": "*departure_port* (5 months ago)" }
                     ]
                     },
                     { "type": "divider" },

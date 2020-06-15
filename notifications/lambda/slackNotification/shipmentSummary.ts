@@ -12,10 +12,15 @@ import {
 import * as TE from 'fp-ts/lib/TaskEither'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { sequenceT } from 'fp-ts/lib/Apply'
-import { v2Client, paginate, liftShipment } from '@distributeaid/flexport-sdk'
+import {
+	v2Client,
+	paginate,
+	liftShipment,
+	LiftedShipment,
+} from '@distributeaid/flexport-sdk'
 import fetch from 'node-fetch'
 import { e } from './escape'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, differenceInDays } from 'date-fns'
 
 const ssm = new SSM()
 const scopePrefix = process.env.STACK_NAME as string
@@ -36,6 +41,12 @@ let settings: Promise<Either<
 		flexport: FlexportSettings
 	}
 >>
+
+export const filterOutOldShipment = (s: LiftedShipment): boolean =>
+	s.status !== 'final_destination' &&
+	differenceInDays(s.actual_arrival_date ?? new Date(), new Date()) > 2
+		? false
+		: true
 
 export const handler = async (): Promise<void> => {
 	if (settings === undefined) {
@@ -68,6 +79,7 @@ export const handler = async (): Promise<void> => {
 		flexportClient.shipment_index(),
 		TE.chain(paginate(flexportClient.resolvePage(liftShipment))),
 		TE.mapLeft(console.error),
+		TE.map((shipments) => shipments.filter(filterOutOldShipment)),
 		TE.chain((shipments) => {
 			const req = {
 				method: 'POST',
