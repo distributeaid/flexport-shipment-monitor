@@ -1,4 +1,3 @@
-@Only
 Feature: Daily Shipment Summary in Slack
 
     Every day there should be a summary of shipments in Slack
