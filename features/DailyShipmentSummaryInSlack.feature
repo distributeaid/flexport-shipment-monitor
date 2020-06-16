@@ -53,17 +53,6 @@ Feature: Daily Shipment Summary in Slack
                     "fields": [
                         {
                         "type": "mrkdwn",
-                        "text": "650363: <https://app.flexport.com/shipments/650363|Oct 24 testing booking 111>"
-                        },
-                        { "type": "mrkdwn", "text": "*final_destination* (3 months ago)" }
-                    ]
-                    },
-                    { "type": "divider" },
-                    {
-                    "type": "section",
-                    "fields": [
-                        {
-                        "type": "mrkdwn",
                         "text": "752834: <https://app.flexport.com/shipments/752834|Test lw2>"
                         },
                         {
@@ -348,17 +337,6 @@ Feature: Daily Shipment Summary in Slack
                     "fields": [
                         {
                         "type": "mrkdwn",
-                        "text": "502163: <https://app.flexport.com/shipments/502163|API test 2 AWB#12345>"
-                        },
-                        { "type": "mrkdwn", "text": "*final_destination* (3 months ago)" }
-                    ]
-                    },
-                    { "type": "divider" },
-                    {
-                    "type": "section",
-                    "fields": [
-                        {
-                        "type": "mrkdwn",
                         "text": "508284: <https://app.flexport.com/shipments/508284|TEST PO 1990, CRD 3/21>"
                         },
                         { "type": "mrkdwn", "text": "*seller_location* (3 months ago)" }
@@ -475,17 +453,6 @@ Feature: Daily Shipment Summary in Slack
                         "text": "493295: <https://app.flexport.com/shipments/493295|Flexport Seller to LA, PO 1315, CRD 2/26>"
                         },
                         { "type": "mrkdwn", "text": "*seller_location* (3 months ago)" }
-                    ]
-                    },
-                    { "type": "divider" },
-                    {
-                    "type": "section",
-                    "fields": [
-                        {
-                        "type": "mrkdwn",
-                        "text": "253590: <https://app.flexport.com/shipments/253590|LCL Test Shipment>"
-                        },
-                        { "type": "mrkdwn", "text": "*final_destination* (3 months ago)" }
                     ]
                     },
                     { "type": "divider" },
@@ -1015,17 +982,6 @@ Feature: Daily Shipment Summary in Slack
                         "text": "680836: <https://app.flexport.com/shipments/680836|lcltest1>"
                         },
                         { "type": "mrkdwn", "text": "*seller_location* (4 months ago)" }
-                    ]
-                    },
-                    { "type": "divider" },
-                    {
-                    "type": "section",
-                    "fields": [
-                        {
-                        "type": "mrkdwn",
-                        "text": "647300: <https://app.flexport.com/shipments/647300|BEARS!>"
-                        },
-                        { "type": "mrkdwn", "text": "*final_destination* (4 months ago)" }
                     ]
                     },
                     { "type": "divider" },

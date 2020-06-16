@@ -17,10 +17,15 @@ import {
 	paginate,
 	liftShipment,
 	LiftedShipment,
+	createError,
+	liftShipmentLeg,
 } from '@distributeaid/flexport-sdk'
 import fetch from 'node-fetch'
 import { e } from './escape'
 import { formatDistanceToNow, differenceInDays } from 'date-fns'
+import * as A from 'fp-ts/lib/Array'
+import * as O from 'fp-ts/lib/Option'
+import { getOrElse } from '../../../lib/fp-ts.util'
 
 const ssm = new SSM()
 const scopePrefix = process.env.STACK_NAME as string
@@ -42,11 +47,18 @@ let settings: Promise<Either<
 	}
 >>
 
-export const filterOutOldShipment = (s: LiftedShipment): boolean =>
-	s.status !== 'final_destination' &&
-	differenceInDays(s.actual_arrival_date ?? new Date(), new Date()) > 2
-		? false
-		: true
+export const filterOutOldShipment = ({
+	shipment,
+	arrivalDate,
+}: {
+	shipment: LiftedShipment
+	arrivalDate: O.Option<Date>
+}): boolean => {
+	if (shipment.status !== 'final_destination') return true
+	if (O.isNone(arrivalDate)) return true
+	if (differenceInDays(new Date(), arrivalDate.value) > 2) return false
+	return true
+}
 
 export const handler = async (): Promise<void> => {
 	if (settings === undefined) {
@@ -78,8 +90,51 @@ export const handler = async (): Promise<void> => {
 	await pipe(
 		flexportClient.shipment_index(),
 		TE.chain(paginate(flexportClient.resolvePage(liftShipment))),
+		TE.chainW((shipments) =>
+			A.array.traverse(TE.taskEither)(shipments, (shipment) =>
+				shipment.status !== 'final_destination' // not arrived, yet
+					? TE.right({ shipment, arrivalDate: O.none })
+					: pipe(
+							TE.right(O.fromNullable(shipment.actual_arrival_date)),
+							getOrElse.TE(() =>
+								pipe(
+									TE.right(shipment.legs),
+									TE.chain(
+										TE.fromOption(() => createError('Shipment has no legs.')),
+									),
+									TE.chain(flexportClient.resolveCollection(liftShipmentLeg)),
+									TE.chain(
+										paginate(flexportClient.resolvePage(liftShipmentLeg)),
+									),
+									TE.map(
+										(shipmentLegs) =>
+											shipmentLegs.sort(
+												(l1, l2) =>
+													(l1.actual_arrival_date?.getTime() ?? 0) -
+													(l2.actual_arrival_date?.getTime() ?? 0),
+											)[shipmentLegs.length - 1]?.actual_arrival_date,
+									),
+									TE.mapLeft((err) => {
+										console.error(
+											JSON.stringify({
+												fetchLegs: err,
+											}),
+										)
+										return undefined
+									}),
+								),
+							),
+							TE.map((arrivalDate) => ({
+								shipment,
+								arrivalDate: O.fromNullable(arrivalDate),
+							})),
+					  ),
+			),
+		),
 		TE.mapLeft(console.error),
-		TE.map((shipments) => shipments.filter(filterOutOldShipment)),
+		TE.map((shipmentsWithArrivalDate) =>
+			shipmentsWithArrivalDate.filter(filterOutOldShipment),
+		),
 		TE.chain((shipments) => {
 			const req = {
 				method: 'POST',
@@ -99,14 +154,14 @@ export const handler = async (): Promise<void> => {
 						...shipments
 							.sort(
 								(
-									{ updated_at: u1, created_date: c1 },
-									{ updated_at: u2, created_date: c2 },
+									{ shipment: { updated_at: u1, created_date: c1 } },
+									{ shipment: { updated_at: u2, created_date: c2 } },
 								) =>
 									(u2 ?? c2)
 										.toISOString()
 										.localeCompare((u1 ?? c1).toISOString()),
 							)
-							.map((shipment) => [
+							.map(({ shipment }) => [
 								{
 									type: 'section',
 									fields: [
