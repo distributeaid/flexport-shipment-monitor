@@ -7,6 +7,7 @@ import { unwrapOptionalKeys } from './unwrapOptionalKeys'
 export type FlexportSettings = {
 	apiKey: string
 	endpoint?: string
+	incomingWebhookSignature: string
 }
 
 export const getFlexportSettings = ({
@@ -21,6 +22,7 @@ export const getFlexportSettings = ({
 		TE.map((f) => ({
 			apiKey: f('apiKey'),
 			endpoint: f('endpoint'),
+			incomingWebhookSignature: f('incomingWebhookSignature'),
 		})),
 		TE.map((cfg) => unwrapOptionalKeys<FlexportSettings>(cfg)),
 	)

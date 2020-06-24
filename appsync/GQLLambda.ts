@@ -1,12 +1,17 @@
 import { Construct, RemovalPolicy, Stack, Duration } from '@aws-cdk/core'
 import { PolicyStatement } from '@aws-cdk/aws-iam'
-import { Code, Function, ILayerVersion, Runtime } from '@aws-cdk/aws-lambda'
+import {
+	Code,
+	Function as Lambda,
+	ILayerVersion,
+	Runtime,
+} from '@aws-cdk/aws-lambda'
 import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs'
 import { CfnGraphQLApi, CfnGraphQLSchema } from '@aws-cdk/aws-appsync'
 import { GQLLambdaResolver, GQLType } from '../aws/resources/GQLLambdaResolver'
 
 export class GQLLambda extends Construct {
-	public readonly lambda: Function
+	public readonly lambda: Lambda
 
 	constructor(
 		parent: Construct,
@@ -24,7 +29,7 @@ export class GQLLambda extends Construct {
 	) {
 		super(parent, `${field}${type}`)
 
-		this.lambda = new Function(this, `Lambda`, {
+		this.lambda = new Lambda(this, `Lambda`, {
 			handler: 'index.handler',
 			runtime: Runtime.NODEJS_12_X,
 			timeout: Duration.seconds(30),

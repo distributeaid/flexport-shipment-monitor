@@ -11,7 +11,9 @@ Feature: Shipment Update Slack notifications
     Scenario: Flexport sends a webhook notification
 
         Given I have a random ShipmentID in "shipmentID"
-        Given I POST to / with this JSON
+        And the X-Hub-Signature header is "secret"
+        And the Content-Type header is "application/json; charset=utf-8"
+        And I POST to / with this JSON
             """
             {
             "_object": "/event",
@@ -237,3 +239,13 @@ Feature: Shipment Update Slack notifications
                 ]
             }
             """
+
+    Scenario: Flexport sends a webhook notification with invalid secret
+
+        Given the X-Hub-Signature header is "foo"
+        And the Content-Type header is "application/json; charset=utf-8"
+        And I POST to / with this JSON
+            """
+            {}
+            """
+        Then the response status code should be 403

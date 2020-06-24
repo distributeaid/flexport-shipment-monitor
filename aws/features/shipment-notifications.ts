@@ -59,9 +59,16 @@ export class ShipmentNotificationFeature extends CDK.Construct {
 					actions: ['dynamoDb:PutItem'],
 					resources: [this.shipmentEventsTable.tableArn],
 				}),
+				new IAM.PolicyStatement({
+					actions: ['ssm:GetParametersByPath'],
+					resources: [
+						`arn:aws:ssm:${stack.region}:${stack.account}:parameter/${stack.stackName}/flexport`,
+					],
+				}),
 			],
 			environment: {
 				SHIPMENT_EVENTS_TABLE: this.shipmentEventsTable.tableName,
+				STACK_NAME: stack.stackName,
 			},
 			layers: [baseLayer],
 			code: lambdas.receiveFlexportWebhooks,

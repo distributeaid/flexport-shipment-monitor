@@ -34,7 +34,7 @@ export const storeWebhookEvent = ({
 						},
 					}),
 					occurred_at: {
-						S: occurred_at || created_at,
+						S: occurred_at ?? created_at,
 					},
 					created_at: {
 						S: created_at,
@@ -54,7 +54,7 @@ export const storeWebhookEvent = ({
 		(err) => {
 			console.error(
 				JSON.stringify({
-					createSubscription: { error: (err as Error).message, TableName },
+					storeWebhookEvent: { error: (err as Error).message, TableName },
 				}),
 			)
 			return {

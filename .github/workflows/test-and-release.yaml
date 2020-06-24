@@ -36,18 +36,17 @@ jobs:
           npx cdk bootstrap
           npx cdk deploy --require-approval never
           npx cdk -a 'node dist/aws/cloudformation-test-extras.js' deploy --require-approval never
+      - name: disable URL resolution in the AWS CLI
+        run: aws configure set cli_follow_urlparam false
       - name: Provide Flexport Settings to Stack
         run: |
-          # disable URL resolution in the AWS CLI: 
-          aws configure set cli_follow_urlparam false
           FLEXPORT_API_KEY=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "flexportMockApiKey") | .OutputValue'`
           FLEXPORT_API_URL=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "flexportMockApiUrl") | .OutputValue'`
           aws ssm put-parameter --name /$STACK_NAME/flexport/apiKey --type String --value $FLEXPORT_API_KEY
           aws ssm put-parameter --name /$STACK_NAME/flexport/endpoint --type String --value $FLEXPORT_API_URL
+          aws ssm put-parameter --name /$STACK_NAME/flexport/incomingWebhookSignature --type String --value "secret"
       - name: Provide Slack Settings to Stack
         run: |
-          # disable URL resolution in the AWS CLI: 
-          aws configure set cli_follow_urlparam false
           WEBHOOK_RECEIVER_URL=`aws cloudformation describe-stacks --stack-name $STACK_NAME-test-extras | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "webhookReceiverApiUrl") | .OutputValue' |  sed 's/\/$//'`
           aws ssm put-parameter --name /$STACK_NAME/slack/webhook --type String --value $WEBHOOK_RECEIVER_URL/slack
       - name: End-to-End Tests

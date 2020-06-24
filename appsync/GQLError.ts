@@ -5,7 +5,7 @@ import { ErrorInfo as SDKErrorInfo } from '@distributeaid/flexport-sdk'
 export type GQLErrorResult = {
 	errorType: ErrorType
 	errorMessage: string
-	data: object
+	data: Record<string, any>
 	errorInfo: {
 		AWSrequestID: string
 	}
