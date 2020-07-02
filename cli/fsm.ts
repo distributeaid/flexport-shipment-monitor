@@ -6,6 +6,7 @@ import { getFlexportSettings } from '../settings/getFlexportSettings'
 import { pipe } from 'fp-ts/lib/pipeable'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { v2Client } from '@distributeaid/flexport-sdk'
+import { showCommand } from './commands/show'
 
 const flexportSettingsFetcher = getFlexportSettings({
 	ssm: new SSM(),
@@ -15,16 +16,19 @@ const flexportSettingsFetcher = getFlexportSettings({
 const fsmCLI = async () => {
 	program.description('Flexport Shipment Monitor')
 
+	const flexportClient = () =>
+		pipe(
+			flexportSettingsFetcher,
+			TE.map((settings) =>
+				v2Client({ apiKey: settings.apiKey, endpoint: settings.endpoint }),
+			),
+		)
+
 	const commands = [
 		listCommand({
-			flexportClient: () =>
-				pipe(
-					flexportSettingsFetcher,
-					TE.map((settings) =>
-						v2Client({ apiKey: settings.apiKey, endpoint: settings.endpoint }),
-					),
-				),
+			flexportClient,
 		}),
+		showCommand({ flexportClient }),
 	]
 
 	let ran = false

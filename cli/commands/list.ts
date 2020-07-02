@@ -77,7 +77,7 @@ export const listCommand = ({
 				shipmentsWithLegs.forEach(({ shipment, arrivalDate }) => {
 					console.log(
 						chalk.grey('-'),
-						chalk.white.bold(`#${shipment.id}`),
+						chalk.white.bold(shipment.id),
 						chalk.white(shipment.name),
 						chalk.blue(shipment.status),
 						shipment.updated_at !== undefined &&
