@@ -1,4 +1,4 @@
-import { regexMatcher } from '@coderbyheart/bdd-feature-runner-aws'
+import { regexMatcher } from '@bifravst/e2e-bdd-test-runner'
 import { World } from '../run-features'
 
 export const mockApiStepRunners = () => [
