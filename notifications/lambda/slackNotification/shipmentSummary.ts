@@ -136,6 +136,57 @@ export const handler = async (): Promise<void> => {
 			shipmentsWithArrivalDate.filter(filterOutOldShipment),
 		),
 		TE.chain((shipments) => {
+			const shipmentsInfo: {
+				type: string
+				fields?: {
+					type: string
+					text: string
+				}[]
+				text?: {
+					type: string
+					text: string
+				}
+			}[] = shipments
+				.sort(
+					(
+						{ shipment: { updated_at: u1, created_date: c1 } },
+						{ shipment: { updated_at: u2, created_date: c2 } },
+					) => (u2 ?? c2).toISOString().localeCompare((u1 ?? c1).toISOString()),
+				)
+				.map(({ shipment }) => [
+					{
+						type: 'section',
+						fields: [
+							{
+								type: 'mrkdwn',
+								text: `${shipment.id}: <https://app.flexport.com/shipments/${
+									shipment.id
+								}|${e(shipment.name) ?? 'Unknown'}>`,
+							},
+							{
+								type: 'mrkdwn',
+								text: `*${e(shipment.status)}* (${formatDistanceToNow(
+									shipment.updated_at ?? shipment.created_date,
+								)} ago)`,
+							},
+						],
+					},
+					{
+						type: 'divider',
+					},
+				])
+				.flat()
+
+			if (shipmentsInfo.length === 0) {
+				shipmentsInfo.push({
+					type: 'section',
+					text: {
+						type: 'mrkdwn',
+						text: 'No active shipments.',
+					},
+				})
+			}
+
 			const req = {
 				method: 'POST',
 				body: JSON.stringify({
@@ -148,44 +199,10 @@ export const handler = async (): Promise<void> => {
 								text: 'Daily shipment update:',
 							},
 						},
-						{
+						shipmentsInfo.length && {
 							type: 'divider',
 						},
-						...shipments
-							.sort(
-								(
-									{ shipment: { updated_at: u1, created_date: c1 } },
-									{ shipment: { updated_at: u2, created_date: c2 } },
-								) =>
-									(u2 ?? c2)
-										.toISOString()
-										.localeCompare((u1 ?? c1).toISOString()),
-							)
-							.map(({ shipment }) => [
-								{
-									type: 'section',
-									fields: [
-										{
-											type: 'mrkdwn',
-											text: `${
-												shipment.id
-											}: <https://app.flexport.com/shipments/${shipment.id}|${
-												e(shipment.name) ?? 'Unknown'
-											}>`,
-										},
-										{
-											type: 'mrkdwn',
-											text: `*${e(shipment.status)}* (${formatDistanceToNow(
-												shipment.updated_at ?? shipment.created_date,
-											)} ago)`,
-										},
-									],
-								},
-								{
-									type: 'divider',
-								},
-							])
-							.flat(),
+						...shipmentsInfo,
 						{
 							type: 'context',
 							elements: [
