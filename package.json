@@ -30,7 +30,7 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -e",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged"
     }
   },
@@ -44,24 +44,24 @@
     ]
   },
   "devDependencies": {
-    "@aws-cdk/aws-apigateway": "^1.57.0",
-    "@aws-cdk/aws-apigatewayv2": "^1.57.0",
-    "@aws-cdk/aws-appsync": "^1.57.0",
-    "@aws-cdk/aws-dynamodb": "^1.57.0",
-    "@aws-cdk/aws-events-targets": "^1.57.0",
-    "@aws-cdk/aws-iam": "^1.57.0",
-    "@aws-cdk/core": "^1.57.0",
-    "@bifravst/cloudformation-helpers": "^3.1.10",
-    "@bifravst/code-style": "^8.0.22",
-    "@bifravst/e2e-bdd-test-runner": "^2.0.8",
-    "@bifravst/package-layered-lambdas": "^3.10.16",
-    "@commitlint/cli": "^9.1.1",
-    "@commitlint/config-angular": "^9.1.1",
+    "@aws-cdk/aws-apigateway": "^1.59.0",
+    "@aws-cdk/aws-apigatewayv2": "^1.59.0",
+    "@aws-cdk/aws-appsync": "^1.59.0",
+    "@aws-cdk/aws-dynamodb": "^1.59.0",
+    "@aws-cdk/aws-events-targets": "^1.59.0",
+    "@aws-cdk/aws-iam": "^1.59.0",
+    "@aws-cdk/core": "^1.59.0",
+    "@bifravst/cloudformation-helpers": "^3.1.15",
+    "@bifravst/code-style": "^8.0.28",
+    "@bifravst/e2e-bdd-test-runner": "^2.1.1",
+    "@bifravst/package-layered-lambdas": "^3.10.21",
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-angular": "^9.1.2",
     "@distributeaid/flexport-api-sandbox": "^1.5.2",
-    "@types/aws-lambda": "^8.10.59",
+    "@types/aws-lambda": "^8.10.61",
     "@types/node-fetch": "^2.5.7",
-    "aws-cdk": "^1.57.0",
-    "aws-sdk": "^2.729.0",
+    "aws-cdk": "^1.59.0",
+    "aws-sdk": "^2.734.0",
     "check-node-version": "^4.0.3",
     "commander": "^6.0.0",
     "husky": "^4.2.5",
@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb-v2-node": "0.1.0-preview.2",
-    "@distributeaid/flexport-sdk": "^2.6.0",
+    "@distributeaid/flexport-sdk": "^2.6.1",
     "chalk": "^4.1.0",
     "date-fns": "^2.15.0",
     "node-fetch": "^2.6.0"
