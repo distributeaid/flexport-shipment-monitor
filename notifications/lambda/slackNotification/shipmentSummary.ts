@@ -153,28 +153,41 @@ export const handler = async (): Promise<void> => {
 						{ shipment: { updated_at: u2, created_date: c2 } },
 					) => (u2 ?? c2).toISOString().localeCompare((u1 ?? c1).toISOString()),
 				)
-				.map(({ shipment }) => [
-					{
-						type: 'section',
-						fields: [
-							{
+				.map(({ shipment }) => {
+					const details = [
+						{
+							type: 'mrkdwn',
+							text: `*${e(shipment.status)}* (${formatDistanceToNow(
+								shipment.updated_at ?? shipment.created_date,
+							)} ago)`,
+						},
+					]
+					if (shipment.calculated_weight !== undefined) {
+						details.push({
+							type: 'mrkdwn',
+							text: `${shipment.calculated_weight.value}${shipment.calculated_weight.unit}`,
+						})
+					}
+					const info = [
+						{
+							type: 'section',
+							text: {
 								type: 'mrkdwn',
 								text: `${shipment.id}: <https://app.flexport.com/shipments/${
 									shipment.id
 								}|${e(shipment.name) ?? 'Unknown'}>`,
 							},
-							{
-								type: 'mrkdwn',
-								text: `*${e(shipment.status)}* (${formatDistanceToNow(
-									shipment.updated_at ?? shipment.created_date,
-								)} ago)`,
-							},
-						],
-					},
-					{
-						type: 'divider',
-					},
-				])
+						},
+						{
+							type: 'section',
+							fields: details,
+						},
+						{
+							type: 'divider',
+						},
+					]
+					return info
+				})
 				.flat()
 
 			if (shipmentsInfo.length === 0) {

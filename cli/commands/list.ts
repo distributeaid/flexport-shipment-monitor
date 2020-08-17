@@ -79,6 +79,9 @@ export const listCommand = ({
 						chalk.grey('-'),
 						chalk.white.bold(shipment.id),
 						chalk.white(shipment.name),
+						chalk.grey(
+							`${shipment.calculated_weight?.value}${shipment.calculated_weight?.unit}`,
+						),
 						chalk.blue(shipment.status),
 						shipment.updated_at !== undefined &&
 							chalk.yellow(
