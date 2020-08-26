@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb-v2-node": "0.1.0-preview.2",
-    "@distributeaid/flexport-sdk": "2.6.2",
+    "@distributeaid/flexport-sdk": "2.6.5",
     "chalk": "4.1.0",
     "date-fns": "2.15.0",
     "node-fetch": "2.6.0"
