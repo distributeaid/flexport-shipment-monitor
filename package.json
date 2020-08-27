@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/distributeaid/flexport-shipment-monitor#readme",
   "engines": {
-    "node": ">=14.0.0",
+    "node": ">=v14.8.0",
     "npm": ">=6.0.0"
   },
   "scripts": {
