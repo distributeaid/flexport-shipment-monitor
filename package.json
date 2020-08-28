@@ -63,7 +63,7 @@
     "aws-cdk": "1.60.0",
     "aws-sdk": "2.741.0",
     "check-node-version": "4.0.3",
-    "commander": "6.0.0",
+    "commander": "6.1.0",
     "husky": "4.2.5",
     "prettier": "2.0.5",
     "typescript": "3.9.7"
