@@ -73,7 +73,7 @@
     "@distributeaid/flexport-sdk": "2.6.6",
     "chalk": "4.1.0",
     "date-fns": "2.16.1",
-    "node-fetch": "2.6.0"
+    "node-fetch": "2.6.1"
   },
   "jest": {
     "testURL": "http://localhost",
