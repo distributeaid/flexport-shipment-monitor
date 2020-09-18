@@ -61,7 +61,7 @@
     "@types/aws-lambda": "8.10.62",
     "@types/node-fetch": "2.5.7",
     "aws-cdk": "1.63.0",
-    "aws-sdk": "2.755.0",
+    "aws-sdk": "2.756.0",
     "check-node-version": "4.0.3",
     "commander": "6.1.0",
     "husky": "4.3.0",
