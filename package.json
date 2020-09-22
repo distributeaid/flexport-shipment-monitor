@@ -54,7 +54,7 @@
     "@bifravst/cloudformation-helpers": "3.1.36",
     "@bifravst/code-style": "8.0.92",
     "@bifravst/e2e-bdd-test-runner": "2.6.6",
-    "@bifravst/package-layered-lambdas": "3.10.33",
+    "@bifravst/package-layered-lambdas": "3.10.34",
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-angular": "11.0.0",
     "@distributeaid/flexport-api-sandbox": "1.5.4",
