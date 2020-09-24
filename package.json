@@ -52,7 +52,7 @@
     "@aws-cdk/aws-iam": "1.64.0",
     "@aws-cdk/core": "1.64.0",
     "@bifravst/cloudformation-helpers": "3.1.41",
-    "@bifravst/code-style": "8.0.92",
+    "@bifravst/code-style": "8.0.93",
     "@bifravst/e2e-bdd-test-runner": "2.6.12",
     "@bifravst/package-layered-lambdas": "3.10.35",
     "@commitlint/cli": "11.0.0",
